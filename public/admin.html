@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Open Library</title>
+    <link rel="stylesheet" href="css/admnstyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="admin-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Open Lib <span>Tel-U</span></h2>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="" class="active"><i>📊</i> Dashboard</a></li>
+                <li><a href="{{ route('users.index') }}"><i>👤</i> Users</a></li>
+                <li><a href=""><i>🏢</i> Ruangan</a></li>
+                <li><a href=""><i>📅</i> Jadwal</a></li>
+                <li><a href=""><i>📝</i> Peminjaman</a></li>
+                <li><a href=""><i>✅</i> Approval</a></li>
+                <li><a href=""><i>🕒</i> Riwayat</a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="login.html" class="logout-btn">Keluar</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header">
+            <div class="header-title">
+                <h1>Admin Dashboard</h1>
+                <p>Ringkasan data sistem saat ini</p>
+            </div>
+            <div class="admin-profile">
+                <span>Halo, <strong>Admin</strong></span>
+                <div class="avatar">A</div>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="card stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Total Users</span>
+                    <h2 id="count-users">-</h2>
+                </div>
+                <div class="stat-icon users">👤</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Ruangan Tersedia</span>
+                    <h2 id="count-ruangan">-</h2>
+                </div>
+                <div class="stat-icon room">🏢</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Menunggu Approval</span>
+                    <h2 id="count-approval">-</h2>
+                </div>
+                <div class="stat-icon pending">⏳</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Total Peminjaman</span>
+                    <h2 id="count-peminjaman">-</h2>
+                </div>
+                <div class="stat-icon total">📈</div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Script tetap sama untuk ambil data dari DB
+    async function loadStats() {
+        try {
+            let res = await fetch("http://127.0.0.1:8000/api/admin/stats");
+            let data = await res.json();
+
+            document.getElementById("count-users").innerText = data.total_users || "-";
+            document.getElementById("count-ruangan").innerText = data.total_ruangan || "-";
+            document.getElementById("count-approval").innerText = data.pending_approval || "-";
+            document.getElementById("count-peminjaman").innerText = data.total_peminjaman || "-";
+        } catch (err) {
+            console.error("Gagal load data");
+        }
+    }
+    loadStats();
+</script>
+
+</body>
+</html>
