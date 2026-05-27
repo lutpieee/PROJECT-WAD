@@ -18,6 +18,10 @@
             --sidebar-width: 260px;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--bg-light);
@@ -26,15 +30,14 @@
             color: var(--text-dark);
         }
 
-        /* --- SIDEBAR STYLING --- */
         .sidebar {
-            width: 260px;
+            width: var(--sidebar-width);
             background: #ffffff;
             display: flex;
             flex-direction: column;
             position: fixed;
             height: 100vh;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
             z-index: 100;
         }
 
@@ -90,15 +93,15 @@
         }
 
         .logout-btn {
-            display: block;
-            text-align: center;
+            width: 100%;
             padding: 10px;
-            color: var(--primary-red);
             border: 1px solid var(--primary-red);
+            background: none;
+            color: var(--primary-red);
             border-radius: 8px;
-            text-decoration: none;
+            font-family: inherit;
             font-weight: 600;
-            transition: 0.3s;
+            cursor: pointer;
         }
 
         .logout-btn:hover {
@@ -106,16 +109,14 @@
             color: #fff;
         }
 
-        /* --- MAIN CONTENT AREA --- */
         .main-content {
             flex: 1;
             padding: 40px;
             margin-left: var(--sidebar-width);
-            /* Agar konten tidak tertutup sidebar */
             min-height: 100vh;
+            width: calc(100% - var(--sidebar-width));
         }
 
-        /* Header Section */
         .header-wrapper {
             display: flex;
             justify-content: space-between;
@@ -127,22 +128,20 @@
             margin: 0;
             font-weight: 600;
             font-size: 28px;
-            color: var(--text-dark);
             border-left: 5px solid var(--primary-red);
             padding-left: 15px;
         }
 
-        /* Table Container */
         .table-container {
             background: white;
-            padding: 0;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
+            min-width: 760px;
             border-collapse: collapse;
         }
 
@@ -152,37 +151,34 @@
         }
 
         th {
-            text-align: left;
             padding: 18px 20px;
+            text-align: center;
             font-weight: 500;
-            text-transform: uppercase;
-            font-size: 13px;
-            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 15px 20px;
+            padding: 16px 20px;
             border-bottom: 1px solid #f0f0f0;
+            text-align: center;
             font-size: 14px;
         }
 
-        tr:last-child td {
+        tbody tr:last-child td {
             border-bottom: none;
         }
 
-        tr:hover {
-            background-color: #fefefe;
-            transition: 0.3s;
+        tbody tr:hover {
+            background: #f9fafb;
         }
 
-        /* Badges */
         .role-badge {
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
-            background: #eee;
-            color: #666;
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
         }
 
         .role-admin {
@@ -190,30 +186,17 @@
             color: var(--primary-red);
         }
 
-        /* Buttons */
         .btn {
             padding: 10px 18px;
             border-radius: 8px;
-            text-decoration: none;
             font-size: 13px;
-            font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-        }
-
-        .btn-add {
-            background: var(--primary-red);
-            color: white;
-            box-shadow: 0 4px 15px rgba(177, 17, 22, 0.3);
-        }
-
-        .btn-add:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
+            text-decoration: none;
+            font-family: inherit;
         }
 
         .btn-edit {
@@ -221,23 +204,22 @@
             color: #ff8800;
         }
 
-        .btn-edit:hover {
-            background: #ff8800;
-            color: white;
-        }
-
         .btn-delete {
             background: #ffe5e5;
             color: #d63031;
-            padding: 8px 15px;
         }
 
-        .btn-delete:hover {
-            background: #d63031;
-            color: white;
+        .action-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Alert */
+        .action-cell form {
+            margin: 0;
+        }
+
         .alert {
             padding: 15px 20px;
             background: #d4edda;
@@ -248,6 +230,11 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .empty-row {
+            color: #64748b;
+            padding: 36px 20px;
         }
 
         @media (max-width: 768px) {
@@ -263,6 +250,18 @@
 
             .main-content {
                 margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 24px 16px;
+            }
+
+            .header-wrapper {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
             }
         }
     </style>
@@ -276,25 +275,35 @@
 
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
-                </li>
-                <li><a href="{{ route('admin.users.index') }}" class="active"><i class="fas fa-users"></i>
-                        <span>Users</span></a></li>
-                <li><a href="{{ route('admin.ruangan.index') }}"
-       class="{{ request()->routeIs('admin.ruangan.*') ? 'active' : '' }}">
-        <i class="fas fa-door-open"></i>
-        <span>Ruangan</span>
-    </a></li>
-                <li><a  href="{{ route('admin.jadwal.index') }}"class="{{ request()->routeIs('admin.jadwal.*') ? 'active' : '' }}"><i class="fas fa-calendar-alt"></i><span>Jadwal</span></a></li>
-                <li><a href="{{ route('admin.approval.index') }}"class="{{ request()->routeIs('admin.approval.*') ? 'active' : ''}}"><i class="fas fa-check-double"></i> <span>Approval</span></a></li>
-                <li><a href="{{ route('admin.riwayat.index') }}"class="{{ request()->routeIs('admin.riwayat.*') ? 'active' : ''}}"><i class="fas fa-history"></i> <span>Riwayat</span></a></li>
+                <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a></li>
+                <li><a href="{{ route('admin.users.index') }}" class="active"><i class="fas fa-users"></i><span>Users</span></a></li>
+                <li><a href="{{ route('admin.ruangan.index') }}"><i class="fas fa-door-open"></i><span>Ruangan</span></a></li>
+                <li><a href="{{ route('admin.jadwal.index') }}"><i class="fas fa-calendar-alt"></i><span>Jadwal</span></a></li>
+                <li><a href="{{ route('admin.approval.index') }}"><i class="fas fa-check-double"></i><span>Approval</span></a></li>
+                <li><a href="{{ route('admin.riwayat.index') }}"><i class="fas fa-history"></i><span>Riwayat</span></a></li>
             </ul>
         </nav>
 
         <div class="sidebar-footer">
-            <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Keluar</span></a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
+                </button>
+            </form>
         </div>
     </aside>
+
+    <main class="main-content">
+        <div class="header-wrapper">
+            <h1>Daftar Pengguna</h1>
+        </div>
+
+        @if(session('success'))
+            <div class="alert">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
+            </div>
+        @endif
 
         <div class="table-container">
             <table>
@@ -303,39 +312,45 @@
                         <th>Nama</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th style="text-align: center;">Aksi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($users as $user)
+                    @forelse($users as $user)
                         <tr>
                             <td><strong>{{ $user->name }}</strong></td>
-                            <td style="color: #666;">{{ $user->email }}</td>
+                            <td>{{ $user->email }}</td>
                             <td>
-                                <span class="role-badge {{ $user->role == 'admin' ? 'role-admin' : '' }}">
+                                <span class="role-badge {{ $user->role === 'admin' ? 'role-admin' : '' }}">
                                     {{ strtoupper($user->role) }}
                                 </span>
                             </td>
-                            <td style="text-align: center;">
-                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-edit" title="Edit User">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                            <td>
+                                <div class="action-cell">
+                                    <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-edit" title="Edit User">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
 
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;"
-                                    onsubmit="return confirm('Hapus user ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-delete">
-                                        <i class="fas fa-trash"></i> Hapus
-                                    </button>
-                                </form>
+                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                                        onsubmit="return confirm('Hapus user ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-delete" title="Hapus User">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4" class="empty-row">Belum ada data pengguna</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
-    </div>
+    </main>
 </body>
 
 </html>
