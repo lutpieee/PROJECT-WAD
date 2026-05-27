@@ -122,6 +122,13 @@
 
         .nav-card p { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 2px; }
         .nav-card strong { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
+        .nav-card small {
+            display: block;
+            margin-top: 4px;
+            color: var(--primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
 
         .bg-blue { background: #eff6ff; color: #2563eb; }
         .bg-green { background: #f0fdf4; color: #16a34a; }
@@ -235,19 +242,25 @@
 
     <!-- QUICK NAV -->
     <div class="quick-nav">
-        <a href="#" class="nav-card">
+        <a href="{{ route('user.progress') }}" class="nav-card">
             <i class="fas fa-tasks bg-blue"></i>
             <div>
                 <p>Status Peminjaman</p>
                 <strong>Cek Progress</strong>
+                @if($pendingCount > 0)
+                    <small>{{ $pendingCount }} menunggu approval</small>
+                @endif
             </div>
         </a>
 
-        <a href="#" class="nav-card">
+        <a href="{{ route('user.riwayat') }}" class="nav-card">
             <i class="fas fa-history bg-green"></i>
             <div>
                 <p>Riwayat Saya</p>
                 <strong>Daftar Peminjaman</strong>
+                @if($riwayatCount > 0)
+                    <small>{{ $riwayatCount }} pengajuan</small>
+                @endif
             </div>
         </a>
     </div>
@@ -274,7 +287,7 @@
                     <h3>RUANGAN {{ $room->nomor_ruangan }}</h3>
                     <p><i class="fas fa-users"></i> Kapasitas {{ $room->kapasitas }} Mahasiswa</p>
 
-                    <a href="{{ route('admin.ruangan.jadwal', $room->id) }}"
+                    <a href="{{ route('user.ruangan.jadwal', $room->id) }}"
                        class="btn-book {{ !$room->status ? 'disabled' : '' }}">
                         Lihat Jadwal
                     </a>

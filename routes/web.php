@@ -40,6 +40,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
 
   Route::get('/home', [HomeController::class, 'index'])->name('user.home');
+  Route::get('/peminjaman/progress', [HomeController::class, 'progress'])->name('user.progress');
+  Route::get('/peminjaman/riwayat', [HomeController::class, 'riwayat'])->name('user.riwayat');
   Route::get('/ruangan/{id}/jadwal', [HomeController::class, 'jadwalRuangan'])
         ->name('user.ruangan.jadwal');
 });
