@@ -185,7 +185,7 @@
                 <p>Bergabunglah untuk menggunakan fasilitas oblip</p>
             </div>
 
-            <form action="{{ route('register.process') }}" method="POST">
+            <form action="{{ route('register.process', [], false) }}" method="POST">
                 @csrf
 
                 <div class="input-group">
@@ -221,7 +221,7 @@
             </form>
 
             <div class="footer-link">
-                <p>Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a></p>
+                <p>Sudah punya akun? <a href="{{ route('login', [], false) }}">Masuk di sini</a></p>
             </div>
         </div>
     </div>

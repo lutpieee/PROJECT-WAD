@@ -204,7 +204,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('login.process') }}" method="POST">
+            <form action="{{ route('login.process', [], false) }}" method="POST">
                 @csrf
 
                 <div class="input-group">
@@ -222,7 +222,7 @@
             </form>
 
             <div class="footer-link">
-                <p>Belum punya akun? <a href="{{ route('register') }}">Daftar di sini</a></p>
+                <p>Belum punya akun? <a href="{{ route('register', [], false) }}">Daftar di sini</a></p>
             </div>
 
             <div class="copyright">
