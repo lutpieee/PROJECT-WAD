@@ -99,6 +99,33 @@
             text-align: center;
             text-decoration: none;
         }
+
+        .alert {
+            background: #f8d7da;
+            border-left: 5px solid #dc2626;
+            border-radius: 10px;
+            color: #7f1d1d;
+            font-size: 13px;
+            margin-bottom: 22px;
+            padding: 12px 14px;
+        }
+
+        .alert ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        @media (max-width: 640px) {
+            .main-content {
+                align-items: flex-start;
+                padding: 24px 16px;
+            }
+
+            .form-card {
+                border-radius: 14px;
+                padding: 28px 20px;
+            }
+        }
     </style>
 </head>
 
@@ -113,6 +140,16 @@
                 <h2>Edit Jadwal Ruangan</h2>
             </div>
 
+            @if($errors->any())
+                <div class="alert">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('admin.jadwal.update', $jadwal->id) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -122,7 +159,7 @@
                     <select name="ruangan_id" required>
                         @foreach($ruangans as $ruangan)
                             <option value="{{ $ruangan->id }}"
-                                {{ $jadwal->ruangan_id == $ruangan->id ? 'selected' : '' }}>
+                                {{ old('ruangan_id', $jadwal->ruangan_id) == $ruangan->id ? 'selected' : '' }}>
                                 {{ $ruangan->nomor_ruangan }}
                             </option>
                         @endforeach
@@ -131,25 +168,25 @@
 
                 <div class="form-group">
                     <label>Tanggal</label>
-                    <input type="date" name="tanggal" value="{{ $jadwal->tanggal }}" required>
+                    <input type="date" name="tanggal" value="{{ old('tanggal', $jadwal->tanggal) }}" required>
                 </div>
 
                 <div class="form-group">
                     <label>Jam Mulai</label>
-                    <input type="time" name="jam_mulai" value="{{ $jadwal->jam_mulai }}" required>
+                    <input type="time" name="jam_mulai" value="{{ old('jam_mulai', \Illuminate\Support\Str::of($jadwal->jam_mulai)->substr(0, 5)) }}" required>
                 </div>
 
                 <div class="form-group">
                     <label>Jam Selesai</label>
-                    <input type="time" name="jam_selesai" value="{{ $jadwal->jam_selesai }}" required>
+                    <input type="time" name="jam_selesai" value="{{ old('jam_selesai', \Illuminate\Support\Str::of($jadwal->jam_selesai)->substr(0, 5)) }}" required>
                 </div>
 
                 <div class="form-group">
                     <label>Status</label>
                     <select name="status" required>
-                        <option value="available" {{ $jadwal->status == 'available' ? 'selected' : '' }}>Available</option>
-                        <option value="booked" {{ $jadwal->status == 'booked' ? 'selected' : '' }}>Booked</option>
-                        <option value="blocked" {{ $jadwal->status == 'blocked' ? 'selected' : '' }}>Blocked</option>
+                        <option value="available" {{ old('status', $jadwal->status) === 'available' ? 'selected' : '' }}>Tersedia</option>
+                        <option value="booked" {{ old('status', $jadwal->status) === 'booked' ? 'selected' : '' }}>Dibooking</option>
+                        <option value="blocked" {{ old('status', $jadwal->status) === 'blocked' ? 'selected' : '' }}>Diblokir</option>
                     </select>
                 </div>
 

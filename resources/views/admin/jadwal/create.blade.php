@@ -119,6 +119,33 @@
             background: #eee;
             color: #666;
         }
+
+        .alert {
+            background: #f8d7da;
+            border-left: 5px solid #dc2626;
+            border-radius: 10px;
+            color: #7f1d1d;
+            font-size: 13px;
+            margin-bottom: 22px;
+            padding: 12px 14px;
+        }
+
+        .alert ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        @media (max-width: 640px) {
+            .main-content {
+                align-items: flex-start;
+                padding: 24px 16px;
+            }
+
+            .form-card {
+                border-radius: 14px;
+                padding: 28px 20px;
+            }
+        }
     </style>
 </head>
 
@@ -133,6 +160,16 @@
                     <h2>Tambah Jadwal Ruangan</h2>
                 </div>
 
+                @if($errors->any())
+                    <div class="alert">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
 <form action="{{ route('admin.jadwal.store') }}" method="POST">
     @csrf
 
@@ -141,7 +178,7 @@
         <select name="ruangan_id" required>
             <option value="">-- Pilih Ruangan --</option>
             @foreach($ruangans as $r)
-                <option value="{{ $r->id }}">
+                <option value="{{ $r->id }}" {{ old('ruangan_id') == $r->id ? 'selected' : '' }}>
                     {{ $r->nomor_ruangan }}
                 </option>
             @endforeach
@@ -150,24 +187,25 @@
 
     <div class="form-group">
         <label>Tanggal</label>
-        <input type="date" name="tanggal" required>
+        <input type="date" name="tanggal" value="{{ old('tanggal') }}" required>
     </div>
 
     <div class="form-group">
         <label>Jam Mulai</label>
-        <input type="time" name="jam_mulai" required>
+        <input type="time" name="jam_mulai" value="{{ old('jam_mulai') }}" required>
     </div>
 
     <div class="form-group">
         <label>Jam Selesai</label>
-        <input type="time" name="jam_selesai" required>
+        <input type="time" name="jam_selesai" value="{{ old('jam_selesai') }}" required>
     </div>
 
     <div class="form-group">
         <label>Status</label>
         <select name="status" required>
-            <option value="1">Tersedia</option>
-            <option value="0">Dipakai</option>
+            <option value="available" {{ old('status', 'available') === 'available' ? 'selected' : '' }}>Tersedia</option>
+            <option value="booked" {{ old('status') === 'booked' ? 'selected' : '' }}>Dibooking</option>
+            <option value="blocked" {{ old('status') === 'blocked' ? 'selected' : '' }}>Diblokir</option>
         </select>
     </div>
 

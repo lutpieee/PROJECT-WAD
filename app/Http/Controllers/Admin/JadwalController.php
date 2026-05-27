@@ -27,28 +27,28 @@ class JadwalController extends Controller
     }
 
     // STORE - SIMPAN JADWAL BARU
-public function store(Request $request)
-{
-    $request->validate([
-        'ruangan_id'  => 'required|exists:ruangans,id',
-        'tanggal'     => 'required|date',
-        'jam_mulai'   => 'required',
-        'jam_selesai' => 'required|after:jam_mulai',
-        'status'      => 'required|in:0,1'
-    ]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'ruangan_id'  => 'required|exists:ruangans,id',
+            'tanggal'     => 'required|date',
+            'jam_mulai'   => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+            'status'      => 'required|in:available,booked,blocked',
+        ]);
 
-    Jadwal::create([
-        'ruangan_id'  => $request->ruangan_id,
-        'tanggal'     => $request->tanggal,
-        'jam_mulai'   => $request->jam_mulai,
-        'jam_selesai' => $request->jam_selesai,
-        'status'      => $request->status
-    ]);
+        if ($this->hasScheduleConflict($validated)) {
+            return back()
+                ->withErrors(['jam_mulai' => 'Jadwal bentrok dengan jadwal lain pada ruangan dan tanggal yang sama.'])
+                ->withInput();
+        }
 
-    return redirect()
-        ->route('admin.jadwal.index')
-        ->with('success', 'Jadwal berhasil ditambahkan');
-}
+        Jadwal::create($validated);
+
+        return redirect()
+            ->route('admin.jadwal.index')
+            ->with('success', 'Jadwal berhasil ditambahkan');
+    }
     // FORM EDIT
     public function edit($id)
     {
@@ -61,16 +61,22 @@ public function store(Request $request)
     // UPDATE
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'ruangan_id' => 'required|exists:ruangans,id',
             'tanggal'    => 'required|date',
-            'jam_mulai'  => 'required',
-            'jam_selesai'=> 'required|after:jam_mulai',
-            'status'     => 'required'
+            'jam_mulai'  => 'required|date_format:H:i',
+            'jam_selesai'=> 'required|date_format:H:i|after:jam_mulai',
+            'status'     => 'required|in:available,booked,blocked',
         ]);
 
+        if ($this->hasScheduleConflict($validated, $id)) {
+            return back()
+                ->withErrors(['jam_mulai' => 'Jadwal bentrok dengan jadwal lain pada ruangan dan tanggal yang sama.'])
+                ->withInput();
+        }
+
         $jadwal = Jadwal::findOrFail($id);
-        $jadwal->update($request->all());
+        $jadwal->update($validated);
 
         return redirect()
             ->route('admin.jadwal.index')
@@ -86,5 +92,16 @@ public function store(Request $request)
         return redirect()
             ->route('admin.jadwal.index')
             ->with('success', 'Jadwal berhasil dihapus');
+    }
+
+    private function hasScheduleConflict(array $data, ?int $ignoreId = null): bool
+    {
+        return Jadwal::query()
+            ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
+            ->where('ruangan_id', $data['ruangan_id'])
+            ->whereDate('tanggal', $data['tanggal'])
+            ->where('jam_mulai', '<', $data['jam_selesai'])
+            ->where('jam_selesai', '>', $data['jam_mulai'])
+            ->exists();
     }
 }

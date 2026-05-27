@@ -18,6 +18,10 @@
             --sidebar-width: 260px;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--bg-light);
@@ -108,6 +112,7 @@
             padding: 40px;
             margin-left: 260px;
             min-height: 100vh;
+            width: calc(100% - 260px);
         }
 
         .header-wrapper {
@@ -129,11 +134,12 @@
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
+            min-width: 760px;
             border-collapse: collapse;
         }
 
@@ -196,6 +202,43 @@
             background: #e8f5e9;
             color: #2e7d32;
         }
+        .status-blocked {
+            background: #f8d7da;
+            color: #b91c1c;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar-header h2,
+            .sidebar-nav span,
+            .logout-btn span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 24px 16px;
+            }
+
+            .header-wrapper {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .btn-add {
+                justify-content: center;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -248,13 +291,25 @@
             </thead>
             <tbody>
                 @foreach($jadwals as $j)
+                @php
+                    $statusClass = match ($j->status) {
+                        'booked' => 'status-booked',
+                        'blocked' => 'status-blocked',
+                        default => 'status-available',
+                    };
+                    $statusLabel = match ($j->status) {
+                        'booked' => 'DIBOOKING',
+                        'blocked' => 'DIBLOKIR',
+                        default => 'TERSEDIA',
+                    };
+                @endphp
                 <tr>
                     <td><strong>{{ \Carbon\Carbon::parse($j->tanggal)->format('d M Y') }}</strong></td>
                     <td>{{ $j->jam_mulai }} - {{ $j->jam_selesai }}</td>
                     <td>Ruangan {{ $j->ruangan->nomor_ruangan }}</td>
                     <td>
-                        <span class="status-badge {{ $j->is_booked ? 'status-booked' : 'status-available' }}">
-                            {{ $j->is_booked ? 'DIBOOKING' : 'TERSEDIA' }}
+                        <span class="status-badge {{ $statusClass }}">
+                            {{ $statusLabel }}
                         </span>
                     </td>
                     <td>
