@@ -1,1 +1,1 @@
-web: php artisan serve --host=0.0.0.0 --port=$PORT
+web: sh -c 'if [ "${DB_CONNECTION:-sqlite}" = "sqlite" ]; then DB_PATH="${DB_DATABASE:-database/database.sqlite}"; mkdir -p "$(dirname "$DB_PATH")"; touch "$DB_PATH"; fi && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}'

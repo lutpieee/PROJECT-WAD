@@ -8,19 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('peminjamans', function (Blueprint $table) {
-            $table->foreignId('user_id')
-                  ->after('id')
-                  ->constrained()
-                  ->cascadeOnDelete();
-        });
+        if (!Schema::hasColumn('peminjamans', 'user_id')) {
+            Schema::table('peminjamans', function (Blueprint $table) {
+                $table->foreignId('user_id')
+                    ->after('id')
+                    ->constrained()
+                    ->cascadeOnDelete();
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('peminjamans', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropColumn('user_id');
-        });
+        // No-op: user_id is part of the base peminjamans table in the current schema.
     }
 };
