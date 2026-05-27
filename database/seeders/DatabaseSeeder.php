@@ -4,24 +4,30 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::firstOrCreate(
-            ['email' => 'admin@oblip.com'],
+        User::updateOrCreate(
+            ['email' => env('ADMIN_EMAIL', 'admin@oblip.com')],
             [
-                'name' => 'Admin',
-                'password' => Hash::make('admin123'),
-                'role' => 'admin'
-            ]
+                'name' => env('ADMIN_NAME', 'Admin'),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'admin123')),
+                'role' => 'admin',
+            ],
         );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        if (! app()->isProduction()) {
+            User::updateOrCreate(
+                ['email' => 'test@example.com'],
+                [
+                    'name' => 'Test User',
+                    'password' => Hash::make('password'),
+                    'role' => 'pengguna',
+                ],
+            );
+        }
     }
 }
