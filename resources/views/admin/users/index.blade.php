@@ -296,20 +296,6 @@
         </div>
     </aside>
 
-    <div class="main-content">
-        <div class="header-wrapper">
-            <h1>Daftar Pengguna</h1>
-            <a href="{{ route('admin.users.create') }}" class="btn btn-add">
-                <i class="fas fa-plus"></i> Tambah Pengguna
-            </a>
-        </div>
-
-        @if(session('success'))
-            <div class="alert">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
-            </div>
-        @endif
-
         <div class="table-container">
             <table>
                 <thead>
