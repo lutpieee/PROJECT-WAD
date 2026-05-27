@@ -466,7 +466,6 @@
         </section>
 
         <section class="quick-actions">
-            <a href="{{ route('admin.users.create') }}" class="action-link"><i class="fas fa-user-plus"></i> Tambah User</a>
             <a href="{{ route('admin.ruangan.create') }}" class="action-link"><i class="fas fa-plus"></i> Tambah Ruangan</a>
             <a href="{{ route('admin.jadwal.create') }}" class="action-link"><i class="fas fa-calendar-plus"></i> Tambah Jadwal</a>
             <a href="{{ route('admin.approval.index') }}" class="action-link"><i class="fas fa-check-double"></i> Cek Approval</a>
