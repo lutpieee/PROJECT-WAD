@@ -185,7 +185,7 @@
                 <p>Bergabunglah untuk menggunakan fasilitas oblip</p>
             </div>
 
-            <form action="{{ route('register.process', [], false) }}" method="POST">
+            <form action="{{ route('register.process') }}" method="POST">
                 @csrf
 
                 <div class="input-group">
@@ -199,8 +199,8 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Email Institusi</label>
-                    <input name="email" type="email" placeholder="nama@telkomuniversity.ac.id"
+                    <label>Email</label>
+                    <input name="email" type="email" placeholder="nama@gmail.com"
                         value="{{ old('email') }}" required>
                     @error('email')
                         <small
@@ -221,7 +221,7 @@
             </form>
 
             <div class="footer-link">
-                <p>Sudah punya akun? <a href="{{ route('login', [], false) }}">Masuk di sini</a></p>
+                <p>Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a></p>
             </div>
         </div>
     </div>

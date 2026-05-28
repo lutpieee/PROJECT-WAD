@@ -204,12 +204,12 @@
                 </div>
             @endif
 
-            <form action="{{ route('login.process', [], false) }}" method="POST">
+            <form action="{{ route('login.process') }}" method="POST">
                 @csrf
 
                 <div class="input-group">
-                    <label>Email Institusi</label>
-                    <input type="email" name="email" placeholder="nama@telkomuniversity.ac.id"
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="nama@gmail.com"
                         value="{{ old('email') }}" required>
                 </div>
 
@@ -222,7 +222,7 @@
             </form>
 
             <div class="footer-link">
-                <p>Belum punya akun? <a href="{{ route('register', [], false) }}">Daftar di sini</a></p>
+                <p>Belum punya akun? <a href="{{ route('register') }}">Daftar di sini</a></p>
             </div>
 
             <div class="copyright">
